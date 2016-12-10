@@ -22,7 +22,7 @@ class Game
 
         std::array<unsigned char, 8> generateDNA();
 
-        void breed(Circle dad, Circle mom);
+        void breed(int dad, int mom);
     protected:
     private:
         RenderWindow* window;

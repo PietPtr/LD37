@@ -14,16 +14,27 @@ class Circle
 
         void moveTo(Vector2f goalPos) { this->goalPos = goalPos; };
 
-        unsigned char r()      { return dadDNA[0]; };
-        unsigned char g()      { return momDNA[1]; };
-        unsigned char b()      { return momDNA[2]; };
-        unsigned char radius() { return dadDNA[3] / 12 + 6; };
-        unsigned char speed()  { return dadDNA[4] / 10 + 5; };
+        unsigned char getr()      { return r; };
+        unsigned char getg()      { return g; };
+        unsigned char getb()      { return b; };
+        unsigned char getRadius() { return radius; };
+        unsigned char getSpeed()  { return speed; };
 
         Vector2f getPos() { return pos; };
-        bool isMoving() { return moving; }
+        bool isMoving() { return moving; };
+        bool isBreeding() { return lastBreedAge > age - 10; };
+        void setBreeding(bool breeding) { this->lastBreedAge = age; };
+        std::array<unsigned char, 8> getMomDNA() { return momDNA; };
+        std::array<unsigned char, 8> getDadDNA() { return dadDNA; };
+        float getAge() { return age; };
+        void setAge(float age) { this->age = age; };
     protected:
     private:
+        unsigned char r;
+        unsigned char g;
+        unsigned char b;
+        unsigned char radius;
+        unsigned char speed;
 
         std::array<unsigned char, 8> momDNA{ {0, 0, 0, 0, 0, 0, 0, 0} };
         std::array<unsigned char, 8> dadDNA{ {0, 0, 0, 0, 0, 0, 0, 0} };
@@ -32,6 +43,10 @@ class Circle
         Vector2f goalPos {-1, -1};
 
         bool moving = false;
+        bool breeding = false;
+
+        float age = 0;
+        float lastBreedAge = -10;
 };
 
 #endif // CIRCLE_H

@@ -17,9 +17,9 @@ void Game::initialize()
     {
         Vector2f pos = Vector2f(20 + i/2 * 320, 10 + i%2 * 140);
         Circle circle = Circle(pos, generateDNA(), generateDNA());
+        circle.setAge(20);
         circles.push_back(circle);
     }
-
 }
 
 void Game::update()
@@ -41,11 +41,11 @@ void Game::update()
     dt = clock.restart();
     totalTime += dt;
 
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i < circles.size(); i++)
     {
         if (!(circles[i].isMoving()))
         {
-            float radius = circles[i].radius();
+            float radius = circles[i].getRadius();
             Vector2f goalPos = Vector2f(randint(radius, 448 - radius),
                                         randint(radius, 224 - radius));
 
@@ -59,15 +59,17 @@ void Game::update()
 
         for (int j = 0; j < circles.size(); j++)
         {
-            if (i != j)
+            if (i != j && !(circles[i].isBreeding()) && circles[i].getAge() > 5 &&
+                          !(circles[j].isBreeding()) && circles[j].getAge() > 5)
             {
                 float dist = sqrt(pow(circles[i].getPos().x - circles[j].getPos().x, 2) +
                                   pow(circles[i].getPos().y - circles[j].getPos().y, 2));
 
-                if (dist < circles[i].radius() + circles[j].radius())
+                if (dist < circles[i].getRadius() + circles[j].getRadius())
                 {
                     std::cout << "Close encounter between " << i << " and " << j <<
                                  " at distance of " << dist << "\n";
+                    breed(i, j);
                 }
             }
         }
@@ -136,6 +138,28 @@ int Game::randint(int low, int high)
     //srand(totalTime.asMicroseconds() * value * rand());
 
     return value;
+}
+
+void Game::breed(int dad, int mom)
+{
+    std::array<unsigned char, 8> dadDNA;
+    std::array<unsigned char, 8> momDNA;
+
+    if (randint(0, 100) > 50) { dadDNA = circles[dad].getDadDNA(); }
+    else { dadDNA = circles[dad].getMomDNA(); }
+
+    if (randint(0, 100) > 50) { momDNA = circles[mom].getDadDNA(); }
+    else { momDNA = circles[mom].getMomDNA(); }
+
+    Vector2f pos = Vector2f((circles[dad].getPos().x + circles[mom].getPos().x) / 2,
+                            (circles[dad].getPos().y + circles[mom].getPos().y) / 2);
+
+    circles[dad].setBreeding(true);
+    circles[mom].setBreeding(true);
+
+    Circle circle = Circle(pos, momDNA, dadDNA);
+
+    circles.push_back(circle);
 }
 
 std::array<unsigned char, 8> Game::generateDNA()
