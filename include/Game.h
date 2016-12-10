@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include "Audio.h"
+#include "Circle.h"
 
 using namespace sf;
 
@@ -18,9 +19,12 @@ class Game
 
         int randint(int low, int high, int seed);
         int randint(int low, int high);
+
+        Circle generateCircle();
     protected:
     private:
         RenderWindow* window;
+        View view;
 
         Time dt;
         Time totalTime;
@@ -28,8 +32,10 @@ class Game
         int frame = 0;
 
         std::vector<std::string> audioFileNames { };
-        std::vector<std::string> textureFileNames { };
+        std::vector<std::string> textureFileNames { "overlay.png", "ground.png" };
 
         std::vector<Audio*> sfx;
         std::vector<Texture> textures;
+
+        std::vector<Circle> circles;
 };
