@@ -1,0 +1,31 @@
+# depslib dependency file v1.0
+1434738331 source:/home/pieter/Coding/C++/GameBase/GameClass/main.cpp
+	<SFML/Graphics.hpp>
+	"Game.h"
+	<iostream>
+
+1434738598 /home/pieter/Coding/C++/GameBase/GameClass/Game.h
+	<SFML/Graphics.hpp>
+	<iostream>
+
+1436005555 source:/home/pieter/Coding/C++/GameBase/GameClass/Game.cpp
+	<SFML/Graphics.hpp>
+	"Game.h"
+
+1449865771 /home/pieter/Coding/C++/GameBase/include/Game.h
+	<SFML/Graphics.hpp>
+	<iostream>
+	"Audio.h"
+
+1435993440 /home/pieter/Coding/C++/GameBase/include/Audio.h
+	<SFML/Audio.hpp>
+
+1434738331 source:/home/pieter/Coding/C++/GameBase/src/main.cpp
+	<SFML/Graphics.hpp>
+	"Game.h"
+	<iostream>
+
+1449865761 source:/home/pieter/Coding/C++/GameBase/src/Game.cpp
+	<SFML/Graphics.hpp>
+	"Game.h"
+
