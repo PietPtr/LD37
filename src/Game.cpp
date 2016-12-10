@@ -1,5 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include "Game.h"
+#include <bitset>
 
 using namespace sf;
 
@@ -10,6 +11,13 @@ Game::Game(RenderWindow* window)
 
 void Game::initialize()
 {
+    unsigned char test = 255;
+    std::bitset<8> x(test);
+    std::cout << x << "\n";
+    test = (1 << 1) ^ test;
+    std::bitset<8> y(test);
+    std::cout << y << "\n";
+
     loadAudio(audioFileNames);
     loadTextures(textureFileNames);
 
@@ -207,6 +215,55 @@ void Game::breed(int dad, int mom)
 
     circles.push_back(circle);
 }
+
+
+std::array<unsigned char, 8> Game::pointMutation(std::array<unsigned char, 8> source)
+{
+    // take a random gene and flip a random bit
+    std::array<unsigned char, 8> product = source;
+    int gene = randint(0, 7);
+
+    product[gene] = (1 << randint(0, 7)) ^ source[gene];
+    return product;
+}
+
+std::array<unsigned char, 8> Game::shiftMutation(std::array<unsigned char, 8> source)
+{
+    // take a random gene and shift the byte 1 bit to the left
+    std::array<unsigned char, 8> product = source;
+    int gene = randint(0, 7);
+    product[gene] = product[gene] << 1;
+    return product;
+}
+
+std::array<unsigned char, 8> Game::reverseMutation(std::array<unsigned char, 8> source)
+{
+    // take a random gene and reverse the bits
+    int gene = randint(0, 7);
+    unsigned char original = source[gene];
+
+    std::array<unsigned char, 8> product = source;
+    product[gene] = 0;
+
+    for (int i = 0; i < 8; i++)
+         product[gene] |= ((original >> i) & 0b1) << (7 - i);
+
+    return product;
+}
+
+std::array<unsigned char, 8> Game::swapMutation(std::array<unsigned char, 8> source)
+{
+    // take two random genes and swap them
+    int gene1 = randint(0, 7);
+    int gene2 = randint(0, 7);
+
+    std::array<unsigned char, 8> product = source;
+    product[gene1] = source[gene2];
+    product[gene2] = source[gene2];
+
+    return product;
+}
+
 
 std::array<unsigned char, 8> Game::generateDNA()
 {

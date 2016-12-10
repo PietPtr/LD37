@@ -22,6 +22,11 @@ class Game
 
         std::array<unsigned char, 8> generateDNA();
 
+        std::array<unsigned char, 8> pointMutation(std::array<unsigned char, 8> source);
+        std::array<unsigned char, 8> shiftMutation(std::array<unsigned char, 8> source);
+        std::array<unsigned char, 8> reverseMutation(std::array<unsigned char, 8> source);
+        std::array<unsigned char, 8> swapMutation(std::array<unsigned char, 8> source);
+
         void breed(int dad, int mom);
     protected:
     private:
@@ -45,6 +50,7 @@ class Game
         std::vector<Circle> circles;
 
         int draggedCircle = -1;
+        unsigned char radiation = 0;
 
         Circle* goalCircle;
 };
