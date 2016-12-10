@@ -25,7 +25,7 @@ int Circle::update(double dt, RenderWindow* window)
     if (goalPos != Vector2f(-1, -1) && !dragged && killed < 0)
     {
         float distToTrash = sqrt(pow(pos.x - 598 + 96, 2) + pow(pos.y - 96 + 32, 2));
-        std::cout << distToTrash << "\n";
+
         if (distToTrash < 32)
             killed = age;
 
@@ -49,6 +49,12 @@ int Circle::update(double dt, RenderWindow* window)
                                      Mouse::getPosition().y - windowPos.y);
 
         Vector2f clickPos = window->mapPixelToCoords(mousePos);
+
+        std::cout << clickPos.y << "\n";
+        clickPos.x = clickPos.x > 640 ? 640 : clickPos.x;
+        clickPos.y = clickPos.y > 250 ? 250 : clickPos.y;
+        clickPos.x = clickPos.x < 0 ? 0 : clickPos.x;
+        clickPos.y = clickPos.y < 0 ? 0 : clickPos.y;
 
         this->pos = Vector2f(clickPos.x - 96, clickPos.y - 32);
     }

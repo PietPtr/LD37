@@ -36,7 +36,8 @@ class Game
         Vector2f trayPosition {12, 0};
 
         std::vector<std::string> audioFileNames { };
-        std::vector<std::string> textureFileNames { "overlay.png", "ground.png", "tray.png" };
+        std::vector<std::string> textureFileNames { "overlay.png", "ground.png", "tray.png",
+                                                    "slider.png" };
 
         std::vector<Audio*> sfx;
         std::vector<Texture> textures;
@@ -44,4 +45,6 @@ class Game
         std::vector<Circle> circles;
 
         int draggedCircle = -1;
+
+        Circle* goalCircle;
 };

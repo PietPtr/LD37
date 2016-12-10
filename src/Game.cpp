@@ -20,6 +20,9 @@ void Game::initialize()
         circle.setAge(20);
         circles.push_back(circle);
     }
+
+    goalCircle = new Circle(Vector2f(496, 282), generateDNA(), generateDNA());
+    goalCircle->setAge(100);
 }
 
 void Game::update()
@@ -106,7 +109,6 @@ void Game::update()
             circles.erase(circles.begin() + i);
         }
     }
-    std::cout << circles.size() << "\n";
 
     frame++;
 }
@@ -143,6 +145,8 @@ void Game::draw()
     {
         circles[draggedCircle].draw(window);
     }
+
+    goalCircle->draw(window);
 
     window->display();
 }
