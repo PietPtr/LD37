@@ -15,8 +15,11 @@ void Game::initialize()
 
     for (int i = 0; i < 4; i++)
     {
-        circles.push_back(generateCircle());
+        Vector2f pos = Vector2f(20 + i/2 * 320, 10 + i%2 * 140);
+        Circle circle = Circle(pos, generateDNA(), generateDNA());
+        circles.push_back(circle);
     }
+
 }
 
 void Game::update()
@@ -38,9 +41,36 @@ void Game::update()
     dt = clock.restart();
     totalTime += dt;
 
+    for (int i = 0; i < 4; i++)
+    {
+        if (!(circles[i].isMoving()))
+        {
+            float radius = circles[i].radius();
+            Vector2f goalPos = Vector2f(randint(radius, 448 - radius),
+                                        randint(radius, 224 - radius));
+
+            circles[i].moveTo(goalPos);
+        }
+    }
+
     for (int i = 0; i < circles.size(); i++)
     {
         circles[i].update(dt.asSeconds());
+
+        for (int j = 0; j < circles.size(); j++)
+        {
+            if (i != j)
+            {
+                float dist = sqrt(pow(circles[i].getPos().x - circles[j].getPos().x, 2) +
+                                  pow(circles[i].getPos().y - circles[j].getPos().y, 2));
+
+                if (dist < circles[i].radius() + circles[j].radius())
+                {
+                    std::cout << "Close encounter between " << i << " and " << j <<
+                                 " at distance of " << dist << "\n";
+                }
+            }
+        }
     }
 
     frame++;
@@ -108,18 +138,13 @@ int Game::randint(int low, int high)
     return value;
 }
 
-Circle Game::generateCircle()
+std::array<unsigned char, 8> Game::generateDNA()
 {
-    Vector2f pos = Vector2f(randint(0, 448), randint(0, 224));
-    std::array<unsigned char, 8> momDNA;
-    std::array<unsigned char, 8> dadDNA;
+    std::array<unsigned char, 8> DNA;
 
-    for (int i = 0; i < momDNA.size(); i++)
+    for (int i = 0; i < DNA.size(); i++)
     {
-        momDNA[i] = randint(0, 255);
-        dadDNA[i] = randint(0, 255);
+        DNA[i] = randint(0, 255);
     }
-    dadDNA[4] = 25;
-    Circle circle = Circle(pos, momDNA, dadDNA);
-    return circle;
+    return DNA;
 }

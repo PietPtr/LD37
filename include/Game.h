@@ -20,7 +20,9 @@ class Game
         int randint(int low, int high, int seed);
         int randint(int low, int high);
 
-        Circle generateCircle();
+        std::array<unsigned char, 8> generateDNA();
+
+        void breed(Circle dad, Circle mom);
     protected:
     private:
         RenderWindow* window;

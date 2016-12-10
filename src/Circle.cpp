@@ -16,13 +16,18 @@ void Circle::update(double dt)
 {
     if (goalPos != Vector2f(-1, -1))
     {
-        Vector2f dir = -pos - goalPos;
-        float dirMag = sqrt(pow(dir.x, 2) + pow(dir.y, 2));
+        Vector2f dir = pos - goalPos;
+        float dirMag = -sqrt(pow(dir.x, 2) + pow(dir.y, 2));
 
-        if (dirMag > 4)
+        if (dirMag < -4)
         {
             Vector2f dirUnit = Vector2f(dir.x / dirMag, dir.y / dirMag);
             this->pos += Vector2f(dirUnit.x * dt * speed(), dirUnit.y * dt * speed());
+            moving = true;
+        }
+        else
+        {
+            moving = false;
         }
     }
 }
@@ -30,14 +35,16 @@ void Circle::update(double dt)
 void Circle::draw(RenderWindow* window)
 {
     CircleShape circle;
-    circle.setRadius(radius() / 8 + 4.5);
+    circle.setRadius(radius() + 0.5);
     circle.setFillColor(Color::Black);
     circle.setPosition(pos + Vector2f(95.5, 31.5));
+    circle.setOrigin(radius(), radius());
     window->draw(circle);
 
-    circle.setRadius(radius() / 8 + 4);
+    circle.setRadius(radius());
     circle.setFillColor(Color(r(), g(), b()));
     circle.setPosition(pos + Vector2f(96, 32));
+    circle.setOrigin(radius(), radius());
     window->draw(circle);
 
 }
