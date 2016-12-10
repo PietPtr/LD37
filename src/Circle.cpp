@@ -20,10 +20,15 @@ Circle::Circle(Vector2f pos, std::array<unsigned char, 8> momDNA,
     this->age = 0;
 }
 
-void Circle::update(double dt, RenderWindow* window)
+int Circle::update(double dt, RenderWindow* window)
 {
-    if (goalPos != Vector2f(-1, -1) && !dragged)
+    if (goalPos != Vector2f(-1, -1) && !dragged && killed < 0)
     {
+        float distToTrash = sqrt(pow(pos.x - 598 + 96, 2) + pow(pos.y - 96 + 32, 2));
+        std::cout << distToTrash << "\n";
+        if (distToTrash < 32)
+            killed = age;
+
         Vector2f dir = pos - goalPos;
         float dirMag = -sqrt(pow(dir.x, 2) + pow(dir.y, 2));
 
@@ -45,32 +50,33 @@ void Circle::update(double dt, RenderWindow* window)
 
         Vector2f clickPos = window->mapPixelToCoords(mousePos);
 
-        std::cout << clickPos.x << " " <<  clickPos.y << "\n";
-
         this->pos = Vector2f(clickPos.x - 96, clickPos.y - 32);
+    }
+    else if (killed >= 0)
+    {
+        return -1;
     }
 
     age += dt;
+
+    return 0;
 }
 
 void Circle::draw(RenderWindow* window)
 {
     CircleShape circle;
-    circle.setRadius(radius + 0.5);
-    circle.setFillColor(Color::Black);
-    circle.setPosition(pos + Vector2f(95.5, 31.5));
-    circle.setOrigin(radius, radius);
-    window->draw(circle);
-
     circle.setRadius(radius);
     circle.setFillColor(Color(r, g, b));
+    circle.setOutlineColor(Color::Black);
+    circle.setOutlineThickness(0.5);
     circle.setPosition(pos + Vector2f(96, 32));
     circle.setOrigin(radius, radius);
 
+    if (isBreeding())
+        circle.setFillColor(Color(r, g, b, 100));
+
     if (age < 5)
-    {
         circle.setFillColor(Color(100, 100, 100, 100));
-    }
 
     window->draw(circle);
 

@@ -9,7 +9,7 @@ class Circle
     public:
         Circle(Vector2f pos, std::array<unsigned char, 8> momDNA,
                              std::array<unsigned char, 8> dadDNA);
-        void update(double dt, RenderWindow* window);
+        int update(double dt, RenderWindow* window);
         void draw(RenderWindow* window);
 
         void moveTo(Vector2f goalPos) { this->goalPos = goalPos; };
@@ -49,8 +49,9 @@ class Circle
         bool breeding = false;
         bool dragged = false;
 
-        float age = 0;
-        float lastBreedAge = -10;
+        float age = 0; // keeps growing
+        float lastBreedAge = -10; // point in time
+        float killed = -1; // point in time
 
 
 };

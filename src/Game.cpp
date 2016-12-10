@@ -53,7 +53,6 @@ void Game::update()
             float dist = sqrt(pow(clickPos.x - 96 - circles[i].getPos().x, 2) +
                               pow(clickPos.y - 32 - circles[i].getPos().y, 2));
 
-            circles[i].setDragged(false);
             if (dist < circles[i].getRadius())
             {
                 circles[i].setDragged(true);
@@ -66,14 +65,14 @@ void Game::update()
     {
         draggedCircle = -1;
     }
-    for (int i = 0; i < circles.size(); i++)
+
+    for (int i = circles.size() - 1; i >= 0; i--)
     {
+        // Make sure only one circle is dragged
         if (i != draggedCircle)
             circles[i].setDragged(false);
-    }
 
-    for (int i = 0; i < circles.size(); i++)
-    {
+        // Set new places for circles to go to
         if (!(circles[i].isMoving()))
         {
             float radius = circles[i].getRadius();
@@ -82,12 +81,8 @@ void Game::update()
 
             circles[i].moveTo(goalPos);
         }
-    }
 
-    for (int i = 0; i < circles.size(); i++)
-    {
-        circles[i].update(dt.asSeconds(), window);
-
+        // Find a mate
         for (int j = 0; j < circles.size(); j++)
         {
             if (i != j && !(circles[i].isBreeding()) && circles[i].getAge() > 5 &&
@@ -104,7 +99,14 @@ void Game::update()
                 }
             }
         }
+
+        // Let the circle update itself
+        if (circles[i].update(dt.asSeconds(), window) < 0)
+        {
+            circles.erase(circles.begin() + i);
+        }
     }
+    std::cout << circles.size() << "\n";
 
     frame++;
 }
