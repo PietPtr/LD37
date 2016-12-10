@@ -41,6 +41,37 @@ void Game::update()
     dt = clock.restart();
     totalTime += dt;
 
+    if (Mouse::isButtonPressed(Mouse::Left))
+    {
+        Vector2i mousePos = Vector2i(Mouse::getPosition().x - window->getPosition().x,
+                                     Mouse::getPosition().y - window->getPosition().y);
+
+        Vector2f clickPos = window->mapPixelToCoords(mousePos);
+
+        for (int i = 0; i < circles.size(); i++)
+        {
+            float dist = sqrt(pow(clickPos.x - 96 - circles[i].getPos().x, 2) +
+                              pow(clickPos.y - 32 - circles[i].getPos().y, 2));
+
+            circles[i].setDragged(false);
+            if (dist < circles[i].getRadius())
+            {
+                circles[i].setDragged(true);
+                draggedCircle = i;
+                break;
+            }
+        }
+    }
+    else
+    {
+        draggedCircle = -1;
+    }
+    for (int i = 0; i < circles.size(); i++)
+    {
+        if (i != draggedCircle)
+            circles[i].setDragged(false);
+    }
+
     for (int i = 0; i < circles.size(); i++)
     {
         if (!(circles[i].isMoving()))
@@ -55,20 +86,20 @@ void Game::update()
 
     for (int i = 0; i < circles.size(); i++)
     {
-        circles[i].update(dt.asSeconds());
+        circles[i].update(dt.asSeconds(), window);
 
         for (int j = 0; j < circles.size(); j++)
         {
             if (i != j && !(circles[i].isBreeding()) && circles[i].getAge() > 5 &&
-                          !(circles[j].isBreeding()) && circles[j].getAge() > 5)
+                          !(circles[j].isBreeding()) && circles[j].getAge() > 5 &&
+                          !(circles[i].isDragged()) && !(circles[j].isDragged()) &&
+                          circles.size() < 12)
             {
                 float dist = sqrt(pow(circles[i].getPos().x - circles[j].getPos().x, 2) +
                                   pow(circles[i].getPos().y - circles[j].getPos().y, 2));
 
                 if (dist < circles[i].getRadius() + circles[j].getRadius())
                 {
-                    std::cout << "Close encounter between " << i << " and " << j <<
-                                 " at distance of " << dist << "\n";
                     breed(i, j);
                 }
             }
@@ -91,6 +122,11 @@ void Game::draw()
     ground.setPosition(Vector2f(96, 32));
     window->draw(ground);
 
+    Sprite tray;
+    tray.setTexture(textures[2]);
+    tray.setPosition(trayPosition);
+    window->draw(tray);
+
     for (int i = 0; i < circles.size(); i++)
     {
         circles[i].draw(window);
@@ -101,6 +137,10 @@ void Game::draw()
     overlay.setPosition(Vector2f(0,0));
     window->draw(overlay);
 
+    if (draggedCircle > -1)
+    {
+        circles[draggedCircle].draw(window);
+    }
 
     window->display();
 }

@@ -33,11 +33,15 @@ class Game
         Clock clock;
         int frame = 0;
 
+        Vector2f trayPosition {12, 0};
+
         std::vector<std::string> audioFileNames { };
-        std::vector<std::string> textureFileNames { "overlay.png", "ground.png" };
+        std::vector<std::string> textureFileNames { "overlay.png", "ground.png", "tray.png" };
 
         std::vector<Audio*> sfx;
         std::vector<Texture> textures;
 
         std::vector<Circle> circles;
+
+        int draggedCircle = -1;
 };

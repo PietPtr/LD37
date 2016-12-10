@@ -9,7 +9,7 @@ class Circle
     public:
         Circle(Vector2f pos, std::array<unsigned char, 8> momDNA,
                              std::array<unsigned char, 8> dadDNA);
-        void update(double dt);
+        void update(double dt, RenderWindow* window);
         void draw(RenderWindow* window);
 
         void moveTo(Vector2f goalPos) { this->goalPos = goalPos; };
@@ -28,6 +28,8 @@ class Circle
         std::array<unsigned char, 8> getDadDNA() { return dadDNA; };
         float getAge() { return age; };
         void setAge(float age) { this->age = age; };
+        bool isDragged() { return dragged; }
+        void setDragged(bool dragged) { this->dragged = dragged; };
     protected:
     private:
         unsigned char r;
@@ -41,12 +43,16 @@ class Circle
 
         Vector2f pos;
         Vector2f goalPos {-1, -1};
+        Vector2i windowPos {0, 0};
 
         bool moving = false;
         bool breeding = false;
+        bool dragged = false;
 
         float age = 0;
         float lastBreedAge = -10;
+
+
 };
 
 #endif // CIRCLE_H

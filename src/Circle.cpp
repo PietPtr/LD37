@@ -20,9 +20,9 @@ Circle::Circle(Vector2f pos, std::array<unsigned char, 8> momDNA,
     this->age = 0;
 }
 
-void Circle::update(double dt)
+void Circle::update(double dt, RenderWindow* window)
 {
-    if (goalPos != Vector2f(-1, -1))
+    if (goalPos != Vector2f(-1, -1) && !dragged)
     {
         Vector2f dir = pos - goalPos;
         float dirMag = -sqrt(pow(dir.x, 2) + pow(dir.y, 2));
@@ -37,6 +37,17 @@ void Circle::update(double dt)
         {
             moving = false;
         }
+    }
+    else if (dragged)
+    {
+        Vector2i mousePos = Vector2i(Mouse::getPosition().x - windowPos.x,
+                                     Mouse::getPosition().y - windowPos.y);
+
+        Vector2f clickPos = window->mapPixelToCoords(mousePos);
+
+        std::cout << clickPos.x << " " <<  clickPos.y << "\n";
+
+        this->pos = Vector2f(clickPos.x - 96, clickPos.y - 32);
     }
 
     age += dt;
@@ -63,4 +74,5 @@ void Circle::draw(RenderWindow* window)
 
     window->draw(circle);
 
+    this->windowPos = window->getPosition();
 }
