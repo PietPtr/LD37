@@ -5,6 +5,14 @@
 
 using namespace sf;
 
+enum Result {
+    NONE,
+    BAD,
+    OKAY,
+    NICE,
+    GREAT
+};
+
 class Game
 {
     public:
@@ -32,6 +40,8 @@ class Game
         void breed(int dad, int mom);
 
         void irradiate(int circleIndex);
+
+        void drawNumbers(RenderWindow* window, int number, Vector2f position);
     protected:
     private:
         RenderWindow* window;
@@ -44,7 +54,8 @@ class Game
 
         std::vector<std::string> audioFileNames { };
         std::vector<std::string> textureFileNames { "overlay.png", "ground.png", "tray.png",
-                                                    "slider.png" };
+                                                    "slider.png", "bad.png", "okay.png",
+                                                    "nice.png", "great.png", "numbers.png" };
 
         std::vector<Audio*> sfx;
         std::vector<Texture> textures;
@@ -62,6 +73,11 @@ class Game
         Vector2f clickPos {0, 0};
 
         int filledTray = -1;
+
+        int score = 0;
+
+        Result result = NONE;
+        Time resultTime;
 
         Circle* goalCircle;
 };

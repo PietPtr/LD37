@@ -35,6 +35,8 @@ class Circle
         void setDragged(bool dragged) { this->dragged = dragged; };
         void kill() { this->killed = age; }
 
+        int compareDNA(Circle* circle);
+
     protected:
     private:
         unsigned char r;

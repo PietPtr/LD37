@@ -139,6 +139,30 @@ void Game::update()
     }
     else if (filledTray >= 0 && trayy <= -156)
     {
+        int scoreAdd = circles[filledTray].compareDNA(goalCircle);
+        if (scoreAdd <= 100)
+        {
+            result = GREAT;
+            score += 100;
+        }
+        else if (scoreAdd > 100 && scoreAdd <= 200)
+        {
+            result = NICE;
+            score += 10;
+        }
+        else if (scoreAdd > 200 && scoreAdd <= 300)
+        {
+            result = OKAY;
+            score += 1;
+        }
+        else
+        {
+            result = BAD;
+            score += -10;
+        }
+
+        resultTime = totalTime;
+
         circles[filledTray].kill();
         filledTray = -1;
     }
@@ -151,7 +175,8 @@ void Game::update()
         trayy = -16;
     }
 
-    std::cout << "trayy: " << trayy << ", fill: " << filledTray << "\n";
+    score = score <= 0 ? 0 : score;
+    std::cout << "score: " << score << "\n";
 
     frame++;
 }
@@ -199,6 +224,16 @@ void Game::draw()
     {
         circles[draggedCircle].draw(window);
     }
+
+    if (result != NONE && totalTime.asSeconds() - resultTime.asSeconds() < 1)
+    {
+        Sprite resultSprite;
+        resultSprite.setPosition(Vector2f(5, 148));
+        resultSprite.setTexture(textures[3 + (int)result]);
+        window->draw(resultSprite);
+    }
+
+    drawNumbers(window, score, Vector2f(40 - 5 * (int)(log10(score)), 232));
 
     goalCircle->draw(window);
 
@@ -376,3 +411,30 @@ std::string DNAstring(std::array<unsigned char, 8> DNA)
     }
     std::cout << "\n";
 }
+
+void Game::drawNumbers(RenderWindow* window, int number, Vector2f position)
+{
+    std::string text = std::to_string(number);
+
+    int drawX = position.x;
+    int drawY = position.y;
+
+    for (int i = 0; i < text.length(); i++)
+    {
+        int num = (int)(text[i]);
+
+        Sprite charSprite;
+        charSprite.setTexture(textures[8]);
+
+        charSprite.setTextureRect(IntRect( (num - 48) * 10, 0, 10, 13));
+
+        charSprite.setPosition(Vector2f(drawX, drawY));
+
+        window->draw(charSprite);
+
+        drawX += 10;
+    }
+}
+
+
+

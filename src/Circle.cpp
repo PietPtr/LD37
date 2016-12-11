@@ -97,3 +97,20 @@ void Circle::draw(RenderWindow* window)
     this->windowPos = window->getPosition();
 }
 
+int Circle::compareDNA(Circle* circle)
+{
+    int diff = 0;
+
+    diff += abs(this->r - circle->getr());
+    diff += abs(this->g - circle->getg());
+    diff += abs(this->b - circle->getb());
+    diff += abs(this->radius - circle->getRadius());
+
+    return diff;
+}
+
+
+
+
+
+
