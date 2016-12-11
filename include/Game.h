@@ -52,7 +52,8 @@ class Game
         std::vector<Circle> circles;
 
         int draggedCircle = -1;
-        unsigned char radiation = 0;
+        int sliderx = 0;
+        int radiation = 0;
 
         Circle* goalCircle;
 };
