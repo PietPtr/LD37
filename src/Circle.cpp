@@ -22,12 +22,17 @@ Circle::Circle(Vector2f pos, std::array<unsigned char, 8> momDNA,
 
 int Circle::update(double dt, RenderWindow* window)
 {
-    if (goalPos != Vector2f(-1, -1) && !dragged && killed < 0)
+    if (goalPos != Vector2f(-1, -1) && !dragged && killed < 0 && !sent)
     {
         float distToTrash = sqrt(pow(pos.x - 598 + 96, 2) + pow(pos.y - 96 + 32, 2));
 
         if (distToTrash < 32)
             killed = age;
+
+        float distToTray = sqrt(pow(pos.x - 44 + 96, 2) + pow(pos.y - 96 + 32, 2));
+
+        if (distToTray < 32)
+            sent = true;
 
         Vector2f dir = pos - goalPos;
         float dirMag = -sqrt(pow(dir.x, 2) + pow(dir.y, 2));
@@ -60,6 +65,10 @@ int Circle::update(double dt, RenderWindow* window)
     else if (killed >= 0)
     {
         return -1;
+    }
+    else if (sent)
+    {
+        return 1;
     }
 
     age += dt;

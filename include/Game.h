@@ -30,6 +30,8 @@ class Game
         std::array<unsigned char, 8> breedMutation(std::array<unsigned char, 8> source);
 
         void breed(int dad, int mom);
+
+        void irradiate(int circleIndex);
     protected:
     private:
         RenderWindow* window;
@@ -39,8 +41,6 @@ class Game
         Time totalTime;
         Clock clock;
         int frame = 0;
-
-        Vector2f trayPosition {12, 0};
 
         std::vector<std::string> audioFileNames { };
         std::vector<std::string> textureFileNames { "overlay.png", "ground.png", "tray.png",
@@ -54,6 +54,14 @@ class Game
         int draggedCircle = -1;
         int sliderx = 0;
         int radiation = 0;
+
+        float trayy/*lmao*/ = -16;
+        float sendy = 0;
+        float traySpeed = 280;
+
+        Vector2f clickPos {0, 0};
+
+        int filledTray = -1;
 
         Circle* goalCircle;
 };

@@ -21,15 +21,19 @@ class Circle
         unsigned char getSpeed()  { return speed; };
 
         Vector2f getPos() { return pos; };
+        void setPos(Vector2f pos) { this->pos = pos; };
         bool isMoving() { return moving; };
         bool isBreeding() { return lastBreedAge > age - 10; };
         void setBreeding(bool breeding) { this->lastBreedAge = age; };
         std::array<unsigned char, 8> getMomDNA() { return momDNA; };
         std::array<unsigned char, 8> getDadDNA() { return dadDNA; };
+        void setMomDNA(std::array<unsigned char, 8> DNA) { this->momDNA = DNA; };
+        void setDadDNA(std::array<unsigned char, 8> DNA) { this->dadDNA = DNA; };
         float getAge() { return age; };
         void setAge(float age) { this->age = age; };
         bool isDragged() { return dragged; }
         void setDragged(bool dragged) { this->dragged = dragged; };
+        void kill() { this->killed = age; }
 
     protected:
     private:
@@ -49,6 +53,7 @@ class Circle
         bool moving = false;
         bool breeding = false;
         bool dragged = false;
+        bool sent = false;
 
         float age = 0; // keeps growing
         float lastBreedAge = -10; // point in time

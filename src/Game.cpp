@@ -49,9 +49,10 @@ void Game::update()
     if (Mouse::isButtonPressed(Mouse::Left))
     {
         Vector2i mousePos = Vector2i(Mouse::getPosition().x - window->getPosition().x,
-                                     Mouse::getPosition().y - window->getPosition().y);
+                                         Mouse::getPosition().y - window->getPosition().y);
 
-        Vector2f clickPos = window->mapPixelToCoords(mousePos);
+        clickPos = window->mapPixelToCoords(mousePos);
+
         if (clickPos.y < 292)
         {
             for (int i = 0; i < circles.size(); i++)
@@ -70,6 +71,7 @@ void Game::update()
         else if (clickPos.y >= 292 && clickPos.x > 98 && clickPos.x < 254)
         {
             sliderx = clickPos.x - 98;
+            radiation = (sliderx / 155.0) * 100;
         }
 
     }
@@ -113,14 +115,43 @@ void Game::update()
         }
 
         // Let the circle update itself
-        if (circles[i].update(dt.asSeconds(), window) < 0)
+        int updateReturn = circles[i].update(dt.asSeconds(), window);
+        if (updateReturn == -1)
         {
             circles.erase(circles.begin() + i);
         }
+        else if (updateReturn == 1)
+        {
+            filledTray = i;
+            sendy = clickPos.y;
+        }
+
+        // Irradiate the circles.
+        irradiate(i);
+
     }
 
-    radiation = (sliderx / 155.0) * 100;
-    std::cout << radiation << "\n";
+    if (filledTray >= 0 && trayy > -156)
+    {
+        circles[filledTray].setPos(Vector2f(circles[filledTray].getPos().x,
+                                            trayy + sendy - 16));
+        trayy -= dt.asSeconds() * traySpeed;
+    }
+    else if (filledTray >= 0 && trayy <= -156)
+    {
+        circles[filledTray].kill();
+        filledTray = -1;
+    }
+    else if (filledTray <= 0 && trayy < -16)
+    {
+        trayy += dt.asSeconds() * traySpeed;
+    }
+    else
+    {
+        trayy = -16;
+    }
+
+    std::cout << "trayy: " << trayy << ", fill: " << filledTray << "\n";
 
     frame++;
 }
@@ -140,7 +171,7 @@ void Game::draw()
 
     Sprite tray;
     tray.setTexture(textures[2]);
-    tray.setPosition(trayPosition);
+    tray.setPosition(Vector2f(12, trayy));
     window->draw(tray);
 
     for (int i = 0; i < circles.size(); i++)
@@ -235,6 +266,25 @@ void Game::breed(int dad, int mom)
     Circle circle = Circle(pos, momDNA, dadDNA);
 
     circles.push_back(circle);
+}
+
+void Game::irradiate(int c)
+{
+    std::array<unsigned char, 8> newDNA;
+    int strand = randint(1, 2);
+    if (strand == 1)
+        newDNA = circles[c].getMomDNA();
+    else
+        newDNA = circles[c].getDadDNA();
+
+    if (randint(1, 10000) < radiation * 1.6)
+        newDNA = pointMutation(newDNA);
+
+    if (strand == 1)
+        circles[c].setMomDNA(newDNA);
+    else
+        circles[c].setDadDNA(newDNA);
+
 }
 
 std::array<unsigned char, 8> Game::breedMutation(std::array<unsigned char, 8> source)
