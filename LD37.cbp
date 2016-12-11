@@ -39,8 +39,10 @@
 			<Add option="-Wall" />
 		</Compiler>
 		<Unit filename="include/Audio.h" />
+		<Unit filename="include/Circle.h" />
 		<Unit filename="include/Game.h" />
 		<Unit filename="include/include.h" />
+		<Unit filename="src/Circle.cpp" />
 		<Unit filename="src/Game.cpp" />
 		<Unit filename="src/main.cpp" />
 		<Extensions>

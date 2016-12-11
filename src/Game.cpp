@@ -208,7 +208,7 @@ void Game::draw()
     }
 
     RectangleShape rad;
-    rad.setFillColor(Color(0, 255, 0, radiation));
+    rad.setFillColor(Color(0, 255, 0, radiation / 2));
     rad.setPosition(Vector2f(96, 31));
     rad.setSize(Vector2f(448, 224));
     window->draw(rad);
@@ -323,7 +323,7 @@ void Game::irradiate(int c)
     else
         newDNA = circles[c].getDadDNA();
 
-    if (randint(1, 10000) < radiation * 5 - 5)
+    if (randint(1, 10000) < radiation * 10 - 5)
         newDNA = pointMutation(newDNA);
 
     if (strand == 1)
