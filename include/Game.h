@@ -55,7 +55,8 @@ class Game
         std::vector<std::string> audioFileNames { };
         std::vector<std::string> textureFileNames { "overlay.png", "ground.png", "tray.png",
                                                     "slider.png", "bad.png", "okay.png",
-                                                    "nice.png", "great.png", "numbers.png" };
+                                                    "nice.png", "great.png", "numbers.png",
+                                                    "tutorial.png"};
 
         std::vector<Audio*> sfx;
         std::vector<Texture> textures;
@@ -75,6 +76,8 @@ class Game
         int filledTray = -1;
 
         int score = 0;
+
+        bool tutorial = true;
 
         Result result = NONE;
         Time resultTime;

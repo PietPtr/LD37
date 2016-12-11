@@ -40,6 +40,10 @@ void Game::update()
                 window->close();
             }
         }
+        if (event.type == Event::MouseButtonPressed)
+        {
+            tutorial = false;
+        }
     }
 
     dt = clock.restart();
@@ -176,7 +180,6 @@ void Game::update()
     }
 
     score = score <= 0 ? 0 : score;
-    std::cout << "score: " << score << "\n";
 
     frame++;
 }
@@ -236,6 +239,14 @@ void Game::draw()
     drawNumbers(window, score, Vector2f(40 - 5 * (int)(log10(score)), 232));
 
     goalCircle->draw(window);
+
+    if (totalTime.asSeconds() < 10 && tutorial)
+    {
+        Sprite tut;
+        tut.setTexture(textures[9]);
+        tut.setPosition(0,0);
+        window->draw(tut);
+    }
 
     window->display();
 }
@@ -312,7 +323,7 @@ void Game::irradiate(int c)
     else
         newDNA = circles[c].getDadDNA();
 
-    if (randint(1, 10000) < radiation * 1.6)
+    if (randint(1, 10000) < radiation * 5 - 5)
         newDNA = pointMutation(newDNA);
 
     if (strand == 1)
@@ -339,7 +350,7 @@ std::array<unsigned char, 8> Game::breedMutation(std::array<unsigned char, 8> so
 
 std::array<unsigned char, 8> Game::pointMutation(std::array<unsigned char, 8> source)
 {
-    std::cout << "Point mutation!\n";
+    //std::cout << "Point mutation!\n";
     // take a random gene and flip a random bit
     std::array<unsigned char, 8> product = source;
     int gene = randint(0, 7);
@@ -350,7 +361,7 @@ std::array<unsigned char, 8> Game::pointMutation(std::array<unsigned char, 8> so
 
 std::array<unsigned char, 8> Game::shiftMutation(std::array<unsigned char, 8> source)
 {
-    std::cout << "Shift mutation!\n";
+    //std::cout << "Shift mutation!\n";
 
     // take a random gene and shift the byte 1 bit to the left
     std::array<unsigned char, 8> product = source;
@@ -361,7 +372,7 @@ std::array<unsigned char, 8> Game::shiftMutation(std::array<unsigned char, 8> so
 
 std::array<unsigned char, 8> Game::reverseMutation(std::array<unsigned char, 8> source)
 {
-    std::cout << "Reverse mutation!\n";
+    //std::cout << "Reverse mutation!\n";
 
     // take a random gene and reverse the bits
     int gene = randint(0, 7);
@@ -378,7 +389,7 @@ std::array<unsigned char, 8> Game::reverseMutation(std::array<unsigned char, 8> 
 
 std::array<unsigned char, 8> Game::swapMutation(std::array<unsigned char, 8> source)
 {
-    std::cout << "Swap mutation!\n";
+    //std::cout << "Swap mutation!\n";
 
     // take two random genes and swap them
     int gene1 = randint(0, 7);

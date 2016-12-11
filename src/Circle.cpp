@@ -71,6 +71,18 @@ int Circle::update(double dt, RenderWindow* window)
         return 1;
     }
 
+    r = r < dadDNA[0] ? r + 1 : r;
+    r = r > dadDNA[0] ? r - 1 : r;
+    g = g < momDNA[0] ? g + 1 : g;
+    g = g > momDNA[0] ? g - 1 : g;
+    b = b < momDNA[0] ? b + 1 : b;
+    b = b > momDNA[0] ? b - 1 : b;
+    radius = radius < dadDNA[3] / 12 + 6 ? radius + 1 : radius;
+    radius = radius > dadDNA[3] / 12 + 6 ? radius - 1 : radius;
+    speed = speed < dadDNA[3] / 12 + 6 ? speed + 1 : speed;
+    speed = speed > dadDNA[3] / 12 + 6 ? speed - 1 : speed;
+
+
     age += dt;
 
     return 0;
