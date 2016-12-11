@@ -50,7 +50,6 @@ int Circle::update(double dt, RenderWindow* window)
 
         Vector2f clickPos = window->mapPixelToCoords(mousePos);
 
-        std::cout << clickPos.y << "\n";
         clickPos.x = clickPos.x > 640 ? 640 : clickPos.x;
         clickPos.y = clickPos.y > 250 ? 250 : clickPos.y;
         clickPos.x = clickPos.x < 0 ? 0 : clickPos.x;
@@ -88,3 +87,4 @@ void Circle::draw(RenderWindow* window)
 
     this->windowPos = window->getPosition();
 }
+

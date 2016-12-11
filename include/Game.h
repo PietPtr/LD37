@@ -27,6 +27,8 @@ class Game
         std::array<unsigned char, 8> reverseMutation(std::array<unsigned char, 8> source);
         std::array<unsigned char, 8> swapMutation(std::array<unsigned char, 8> source);
 
+        std::array<unsigned char, 8> breedMutation(std::array<unsigned char, 8> source);
+
         void breed(int dad, int mom);
     protected:
     private:

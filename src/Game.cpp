@@ -11,13 +11,6 @@ Game::Game(RenderWindow* window)
 
 void Game::initialize()
 {
-    unsigned char test = 255;
-    std::bitset<8> x(test);
-    std::cout << x << "\n";
-    test = (1 << 1) ^ test;
-    std::bitset<8> y(test);
-    std::cout << y << "\n";
-
     loadAudio(audioFileNames);
     loadTextures(textureFileNames);
 
@@ -196,17 +189,23 @@ int Game::randint(int low, int high)
 
 void Game::breed(int dad, int mom)
 {
+    // Inherit DNA
     std::array<unsigned char, 8> dadDNA;
     std::array<unsigned char, 8> momDNA;
 
-    if (randint(0, 100) > 50) { dadDNA = circles[dad].getDadDNA(); }
+    if (randint(1, 100) > 50) { dadDNA = circles[dad].getDadDNA(); }
     else { dadDNA = circles[dad].getMomDNA(); }
 
-    if (randint(0, 100) > 50) { momDNA = circles[mom].getDadDNA(); }
+    if (randint(1, 100) > 50) { momDNA = circles[mom].getDadDNA(); }
     else { momDNA = circles[mom].getMomDNA(); }
 
+    // Set the position
     Vector2f pos = Vector2f((circles[dad].getPos().x + circles[mom].getPos().x) / 2,
                             (circles[dad].getPos().y + circles[mom].getPos().y) / 2);
+
+    // Mutate, not based on radiation.
+    dadDNA = breedMutation(dadDNA);
+    momDNA = breedMutation(momDNA);
 
     circles[dad].setBreeding(true);
     circles[mom].setBreeding(true);
@@ -216,9 +215,24 @@ void Game::breed(int dad, int mom)
     circles.push_back(circle);
 }
 
+std::array<unsigned char, 8> Game::breedMutation(std::array<unsigned char, 8> source)
+{
+    std::array<unsigned char, 8> product = source;
+    if (randint(1, 100) <= 25)
+        product = pointMutation(product);
+    if (randint(1, 100) <= 10)
+        product = shiftMutation(product);
+    if (randint(1, 100) <= 5)
+        product = reverseMutation(product);
+    if (randint(1, 100) <= 1)
+        product = swapMutation(product);
+
+    return product;
+}
 
 std::array<unsigned char, 8> Game::pointMutation(std::array<unsigned char, 8> source)
 {
+    std::cout << "Point mutation!\n";
     // take a random gene and flip a random bit
     std::array<unsigned char, 8> product = source;
     int gene = randint(0, 7);
@@ -229,6 +243,8 @@ std::array<unsigned char, 8> Game::pointMutation(std::array<unsigned char, 8> so
 
 std::array<unsigned char, 8> Game::shiftMutation(std::array<unsigned char, 8> source)
 {
+    std::cout << "Shift mutation!\n";
+
     // take a random gene and shift the byte 1 bit to the left
     std::array<unsigned char, 8> product = source;
     int gene = randint(0, 7);
@@ -238,6 +254,8 @@ std::array<unsigned char, 8> Game::shiftMutation(std::array<unsigned char, 8> so
 
 std::array<unsigned char, 8> Game::reverseMutation(std::array<unsigned char, 8> source)
 {
+    std::cout << "Reverse mutation!\n";
+
     // take a random gene and reverse the bits
     int gene = randint(0, 7);
     unsigned char original = source[gene];
@@ -253,17 +271,18 @@ std::array<unsigned char, 8> Game::reverseMutation(std::array<unsigned char, 8> 
 
 std::array<unsigned char, 8> Game::swapMutation(std::array<unsigned char, 8> source)
 {
+    std::cout << "Swap mutation!\n";
+
     // take two random genes and swap them
     int gene1 = randint(0, 7);
     int gene2 = randint(0, 7);
 
     std::array<unsigned char, 8> product = source;
     product[gene1] = source[gene2];
-    product[gene2] = source[gene2];
+    product[gene2] = source[gene1];
 
     return product;
 }
-
 
 std::array<unsigned char, 8> Game::generateDNA()
 {
@@ -274,4 +293,14 @@ std::array<unsigned char, 8> Game::generateDNA()
         DNA[i] = randint(0, 255);
     }
     return DNA;
+}
+
+std::string DNAstring(std::array<unsigned char, 8> DNA)
+{
+    for (int i = 0; i < 8; i++)
+    {
+        std::bitset<8> x(DNA[i]);
+        std::cout << x << " ";
+    }
+    std::cout << "\n";
 }

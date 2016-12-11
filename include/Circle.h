@@ -30,6 +30,7 @@ class Circle
         void setAge(float age) { this->age = age; };
         bool isDragged() { return dragged; }
         void setDragged(bool dragged) { this->dragged = dragged; };
+
     protected:
     private:
         unsigned char r;
